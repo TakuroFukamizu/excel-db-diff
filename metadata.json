@@ -1,0 +1,5 @@
+{
+  "name": "DB Spec Diff AI",
+  "description": "An AI-powered tool to compare Excel-based Database Definition Documents. It parses Excel sheets and uses Gemini to semantically analyze changes in tables, columns, indexes, and triggers.",
+  "requestFramePermissions": []
+}
