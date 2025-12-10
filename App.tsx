@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Database, Zap, RefreshCw, FileDiff, Globe } from 'lucide-react';
+import { Database, Zap, RefreshCw, FileDiff, Globe, Download } from 'lucide-react';
 import { FileUploader } from './components/FileUploader';
 import { DiffResultCard } from './components/DiffResultCard';
 import { parseExcelFile } from './services/excelService';
@@ -155,6 +155,60 @@ const App: React.FC = () => {
     setIsProcessing(false);
   }, [oldWorkbook, newWorkbook, language, t]);
 
+  const handleDownloadReport = () => {
+    if (results.length === 0) return;
+
+    const date = new Date().toLocaleString(language === 'ja' ? 'ja-JP' : language === 'fr' ? 'fr-FR' : 'en-US');
+    const oldName = oldWorkbook?.fileName || 'Unknown';
+    const newName = newWorkbook?.fileName || 'Unknown';
+    
+    let md = `# ${t.reportTitle}\n\n`;
+    md += `**${t.generatedOn}:** ${date}\n\n`;
+    md += `## ${t.filesCompared}\n`;
+    md += `- **${t.oldVersion}:** ${oldName}\n`;
+    md += `- **${t.newVersion}:** ${newName}\n\n`;
+    md += `---\n\n`;
+    md += `## ${t.resultsTitle}\n\n`;
+
+    results.forEach(result => {
+      md += `### ${result.sheetName}\n\n`;
+      md += `**Status:** ${t.status[result.status] || result.status}\n\n`;
+      
+      if (result.summary) {
+        md += `**${t.summary}:** ${result.summary}\n\n`;
+      }
+
+      if (result.diffs && result.diffs.length > 0) {
+        // Table header
+        md += `| ${t.tableHeaders.type} | ${t.tableHeaders.action} | ${t.tableHeaders.target} | ${t.tableHeaders.description} | ${t.tableHeaders.oldValue} | ${t.tableHeaders.newValue} |\n`;
+        md += `|---|---|---|---|---|---|\n`;
+        
+        result.diffs.forEach(diff => {
+           const typeStr = t.types[diff.type] || diff.type;
+           const actionStr = t.actions[diff.action] || diff.action;
+           const safe = (s?: string) => s ? s.replace(/\|/g, '\\|').replace(/\n/g, '<br>').replace(/\r/g, '') : '-';
+           
+           md += `| ${typeStr} | ${actionStr} | ${safe(diff.target)} | ${safe(diff.description)} | ${safe(diff.oldValue)} | ${safe(diff.newValue)} |\n`;
+        });
+        md += `\n`;
+      } else if (result.status === 'COMPLETED' && (!result.diffs || result.diffs.length === 0)) {
+         md += `_${t.noChanges}_\n\n`;
+      }
+      
+      md += `---\n\n`;
+    });
+
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `db-diff-report-${new Date().toISOString().slice(0,10)}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center py-10 px-4 md:px-8 max-w-5xl mx-auto">
       
@@ -237,14 +291,28 @@ const App: React.FC = () => {
       {/* Results Section */}
       <div className="w-full space-y-4">
         {results.length > 0 && (
-           <div className="flex items-center justify-between mb-4">
+           <div className="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4">
              <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
                <FileDiff className="w-6 h-6 text-slate-500" />
                {t.resultsTitle}
              </h2>
-             <span className="text-sm text-slate-500">
-               {results.filter(r => r.status === 'COMPLETED').length} {t.processed}
-             </span>
+             
+             <div className="flex items-center gap-4">
+                {!isProcessing && (
+                  <button 
+                    onClick={handleDownloadReport}
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors shadow-sm"
+                    title={t.downloadReport}
+                  >
+                    <Download className="w-4 h-4" />
+                    <span className="hidden sm:inline">{t.downloadReport}</span>
+                    <span className="sm:hidden">Markdown</span>
+                  </button>
+                )}
+               <span className="text-sm text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+                 {results.filter(r => r.status === 'COMPLETED').length} {t.processed}
+               </span>
+             </div>
            </div>
         )}
 

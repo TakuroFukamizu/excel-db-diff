@@ -25,6 +25,10 @@ export const translations = {
     sheetRemovedDesc: "Sheet removed from the specification",
     errorPrefix: "Error:",
     unknownError: "Unknown error",
+    downloadReport: "Download Report (Markdown)",
+    reportTitle: "Database Specification Comparison Report",
+    generatedOn: "Generated on",
+    filesCompared: "Files Compared",
     status: {
       PENDING: "pending",
       PROCESSING: "processing",
@@ -44,6 +48,14 @@ export const translations = {
       [ChangeAction.ADDED]: "Added",
       [ChangeAction.REMOVED]: "Removed",
       [ChangeAction.MODIFIED]: "Modified"
+    },
+    tableHeaders: {
+      type: "Type",
+      action: "Action",
+      target: "Target",
+      description: "Description",
+      oldValue: "Old Value",
+      newValue: "New Value"
     }
   },
   ja: {
@@ -70,6 +82,10 @@ export const translations = {
     sheetRemovedDesc: "仕様書からシートが削除されました",
     errorPrefix: "エラー:",
     unknownError: "不明なエラー",
+    downloadReport: "レポートをダウンロード (Markdown)",
+    reportTitle: "DB仕様書差分比較レポート",
+    generatedOn: "作成日",
+    filesCompared: "比較ファイル",
     status: {
       PENDING: "待機中",
       PROCESSING: "処理中",
@@ -89,6 +105,14 @@ export const translations = {
       [ChangeAction.ADDED]: "追加",
       [ChangeAction.REMOVED]: "削除",
       [ChangeAction.MODIFIED]: "変更"
+    },
+    tableHeaders: {
+      type: "種別",
+      action: "操作",
+      target: "対象",
+      description: "内容",
+      oldValue: "変更前",
+      newValue: "変更後"
     }
   },
   fr: {
@@ -115,6 +139,10 @@ export const translations = {
     sheetRemovedDesc: "Feuille supprimée de la spécification",
     errorPrefix: "Erreur:",
     unknownError: "Erreur inconnue",
+    downloadReport: "Télécharger le rapport (Markdown)",
+    reportTitle: "Rapport de comparaison des spécifications de BD",
+    generatedOn: "Généré le",
+    filesCompared: "Fichiers comparés",
     status: {
       PENDING: "en attente",
       PROCESSING: "traitement",
@@ -134,6 +162,14 @@ export const translations = {
       [ChangeAction.ADDED]: "Ajouté",
       [ChangeAction.REMOVED]: "Supprimé",
       [ChangeAction.MODIFIED]: "Modifié"
+    },
+    tableHeaders: {
+      type: "Type",
+      action: "Action",
+      target: "Cible",
+      description: "Description",
+      oldValue: "Ancienne valeur",
+      newValue: "Nouvelle valeur"
     }
   }
 };

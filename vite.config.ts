@@ -10,8 +10,11 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     define: {
-      // Expose API_KEY to the client-side code safely
+      // Expose env vars to the client-side code safely
       'process.env.API_KEY': JSON.stringify(env.API_KEY),
+      'process.env.LLM_PROVIDER': JSON.stringify(env.LLM_PROVIDER),
+      'process.env.API_BASE_URL': JSON.stringify(env.API_BASE_URL),
+      'process.env.MODEL_NAME': JSON.stringify(env.MODEL_NAME),
     },
   };
 });
